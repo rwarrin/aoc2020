@@ -10,7 +10,7 @@ ForwardToValue(char *At)
 }
 
 inline b32
-NumberInRange(u32 Min, u32 Number, u32 Max)
+NumberInRange(s32 Min, s32 Number, s32 Max)
 {
     b32 Result = 0;
     if((Number >= Min) && (Number <= Max))
@@ -102,25 +102,44 @@ ValidateHCL(char *Str)
     b32 Result = false;
     char *At = ForwardToValue(Str);
 
-    char Color[6] = {};
+    s32 RequiredLength = 6;
+    char Color[12] = {};
     if(sscanf(At, "#%s", &Color) == 1)
     {
-        Result = true;
-        for(u32 Index = 0; Index < ArrayCount(Color); ++Index)
+        s32 Length = (s32)strlen(Color);
+        if(Length == RequiredLength)
         {
-            char Character = Color[Index];
-            if((Character == 0) &&
-               !(((Character >= 'a') && (Character <= 'f')) ||
-                ((Character >= '0') && (Character <= '9'))))
+            Result = true;
+            for(s32 Index = 0; Index < Length; ++Index)
             {
-                Result = false;
-                break;
+                char Character = Color[Index];
+                if((Character != 0) &&
+                   (((Character >= 'a') && (Character <= 'f')) ||
+                    ((Character >= '0') && (Character <= '9'))))
+                {
+                }
+                else
+                {
+                    Result = false;
+                    break;
+                }
             }
         }
     }
 
     return(Result);
 }
+
+static char *HairColors[] =
+{
+    "amb",
+    "blu",
+    "brn",
+    "gry",
+    "grn",
+    "hzl",
+    "oth",
+};
 
 inline b32
 ValidateECL(char *Str)
@@ -129,23 +148,12 @@ ValidateECL(char *Str)
     b32 Result = false;
     char *At = ForwardToValue(Str);
 
-    char *Colors[] =
-    {
-        "amb",
-        "blu",
-        "brn",
-        "gry",
-        "grn",
-        "hzl",
-        "oth",
-    };
-
     char Color[3] = {};
     if(sscanf(At, "%s", &Color) == 1)
     {
-        for(u32 Index = 0; Index < ArrayCount(Colors); ++Index)
+        for(u32 Index = 0; Index < ArrayCount(HairColors); ++Index)
         {
-            if(strcmp(Color, Colors[Index]) == 0)
+            if(strcmp(Color, HairColors[Index]) == 0)
             {
                 Result = true;
                 break;
@@ -238,13 +246,10 @@ main(void)
                 char *At = 0;
                 if((At = strstr(ReadBuffer, FieldInfo->Name)) != 0)
                 {
-                    if(FieldInfo->ValidationFunc)
+                    b32 Valid = FieldInfo->ValidationFunc(At);
+                    if(Valid)
                     {
-                        b32 Valid = FieldInfo->ValidationFunc(At);
-                        if(Valid)
-                        {
-                            Record |= FieldInfo->Flag;
-                        }
+                        Record |= FieldInfo->Flag;
                     }
                 }
             }
