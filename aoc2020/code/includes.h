@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <limits.h>
+#include <string.h>
 
 #define ArrayCount(Array) (sizeof((Array)) / sizeof((Array)[0]))
 
-#define Assert(Condition) if(!(Condition)) { *(int *) = 0; }
+#define Assert(Condition) if(!(Condition)) { *(int *)0 = 0; }
 
 #define InvalidCodePath Assert(!"Invalid Code Path")
 #define InvalidDefaultCase default: { Assert(!"Invalid Default Case"); } break
