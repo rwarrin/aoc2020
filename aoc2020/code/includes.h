@@ -8,6 +8,9 @@
 
 #define ArrayCount(Array) (sizeof((Array)) / sizeof((Array)[0]))
 
+#define MIN(A, B) ((A) < (B) ? (A) : (B))
+#define MAX(A, B) ((A) > (B) ? (A) : (B))
+
 #define Assert(Condition) if(!(Condition)) { *(int *)0 = 0; }
 
 #define InvalidCodePath Assert(!"Invalid Code Path")
