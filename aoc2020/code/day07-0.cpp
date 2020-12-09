@@ -117,9 +117,17 @@ RecursivelyTestBag(u8 *AdjacencyList, u32 GraphNodeIndex, u32 MaxVertexCount, u3
         ++GraphVertexIndex)
     {
         u8 Value = *(AdjacencyList + (GraphNodeIndex * MaxVertexCount) + GraphVertexIndex);
-        if(Value)
+        if(Value == 2)
+        {
+            Result = true;
+        }
+        else if(Value == 1)
         {
             Result = RecursivelyTestBag(AdjacencyList, GraphVertexIndex, MaxVertexCount, TargetGraphNodeIndex);
+            if(Result)
+            {
+                *(AdjacencyList + (GraphNodeIndex * MaxVertexCount) + GraphVertexIndex) = 2;
+            }
         }
     }
 
@@ -178,8 +186,13 @@ main(void)
             GraphVertexIndex < ArrayCount(AdjacencyList[0]);
             ++GraphVertexIndex)
         {
-            // printf("%d", AdjacencyList[GraphNodeIndex][GraphVertexIndex]);
-            if(AdjacencyList[GraphNodeIndex][GraphVertexIndex])
+            u32 Value = AdjacencyList[GraphNodeIndex][GraphVertexIndex];
+            if(Value == 2)
+            {
+                ++GraphNodesThatLeadToTarget;
+                break;
+            }
+            else if(Value == 1)
             {
                 u32 TargetReached = RecursivelyTestBag(&AdjacencyList[0][0], GraphVertexIndex, ArrayCount(AdjacencyList[0]), TargetGraphIndex);
                 if(TargetReached)
@@ -189,7 +202,6 @@ main(void)
                 }
             }
         }
-        // printf("\n");
     }
 
     printf("Answer: %d bags\n", GraphNodesThatLeadToTarget);
