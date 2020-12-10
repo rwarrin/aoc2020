@@ -27,38 +27,6 @@ struct program
     struct instruction Instructions[1024];
 };
 
-struct file_contents
-{
-    u32 Size;
-    char *Contents;
-};
-
-static struct file_contents
-ReadFile(char *FileName)
-{
-    struct file_contents Result = {};
-
-    FILE *File = fopen(FileName, "rb");
-    if(File)
-    {
-        fseek(File, 0, SEEK_END);
-        Result.Size = (u32)ftell(File);
-        fseek(File, 0, SEEK_SET);
-
-        Result.Contents = (char *)malloc(Result.Size + 1);
-        fread(Result.Contents, 1, Result.Size, File);
-        Result.Contents[Result.Size] = 0;
-
-        fclose(File);
-    }
-    else
-    {
-        fprintf(stderr, "Failed to open file.\n");
-    }
-
-    return(Result);
-}
-
 int
 main(void)
 {
