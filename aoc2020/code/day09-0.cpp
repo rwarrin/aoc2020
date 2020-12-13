@@ -1,22 +1,5 @@
 #include "includes.h"
 
-inline s64
-atos64(char *Str)
-{
-    s64 Result = 0;
-
-    while((*Str != 0) &&
-          (*Str != '\r') &&
-          (*Str != '\n'))
-    {
-        s32 Digit = *Str - '0';
-        Result = (Result*10) + Digit;
-        ++Str;
-    }
-
-    return(Result);
-}
-
 inline b32
 CanSum(s64 Target, s64 *Numbers, s32 Length, s64 LastDiffend, s32 Depth = 0)
 {

@@ -63,5 +63,22 @@ ReadFile(char *FileName)
     return(Result);
 }
 
+inline s64
+atos64(char *Str)
+{
+    s64 Result = 0;
+
+    while((*Str != 0) &&
+          (*Str != '\r') &&
+          (*Str != '\n'))
+    {
+        s32 Digit = *Str - '0';
+        Result = (Result*10) + Digit;
+        ++Str;
+    }
+
+    return(Result);
+}
+
 #define INCLUDES_H
 #endif
