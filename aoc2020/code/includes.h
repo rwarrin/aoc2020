@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <string.h>
+#include <math.h>
 
 #define ArrayCount(Array) (sizeof((Array)) / sizeof((Array)[0]))
 
@@ -26,10 +27,26 @@ typedef int32_t s32;
 typedef int64_t s64;
 typedef float r32;
 typedef double r64;
+typedef r32 f32;
+typedef r64 f64;
 typedef s32 b32;
 
 #define true 1
 #define false 0
+
+#define PI 3.14159265f
+
+struct v2
+{
+    f32 x;
+    f32 y;
+};
+
+struct v2i
+{
+    s32 x;
+    s32 y;
+};
 
 struct file_contents
 {
