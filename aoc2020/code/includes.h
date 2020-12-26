@@ -30,6 +30,7 @@ typedef double r64;
 typedef r32 f32;
 typedef r64 f64;
 typedef s32 b32;
+typedef size_t umm;
 
 #define true 1
 #define false 0
@@ -93,6 +94,67 @@ atos64(char *Str)
         Result = (Result*10) + Digit;
         ++Str;
     }
+
+    return(Result);
+}
+
+inline s32
+StringCompare(char *A, char *B)
+{
+    s32 Result = 0;
+    if(A && B)
+    {
+        for(;;)
+        {
+            if(*A == 0)
+            {
+                Result = 0;
+                break;
+            }
+            else if(*A != *B)
+            {
+                Result = (*A - *B);
+                break;
+            }
+
+            ++A, ++B;
+        }
+    }
+
+    return(Result);
+}
+
+#define Kilobytes(Count) ((Count)*1024LL)
+#define Megabytes(Count) (Kilobytes(Count)*1024LL)
+#define Gigabytes(Count) (Megabytes(Count)*1024LL)
+
+struct memory_arena
+{
+    umm Size;
+    umm Used;
+    u8 *Base;
+};
+
+static struct memory_arena
+InitializeArena(umm Size)
+{
+    struct memory_arena Result = {};
+    Result.Size = Size;
+    Result.Used = 0;
+    Result.Base = (u8 *)malloc(Size);
+
+    return(Result);
+};
+
+#define PushStruct(Arena, Type) (Type *)Push_(Arena, sizeof(Type))
+#define PushArray(Arena, Count, Type) (Type *)Push_(Arena, sizeof(Type)*Count)
+inline u8 *
+Push_(struct memory_arena *Arena, umm Size)
+{
+    Assert((Arena->Used + Size) < Arena->Size);
+    
+    u8 *Result = Arena->Base + Arena->Used;
+    Arena->Used += Size;
 
     return(Result);
 }
